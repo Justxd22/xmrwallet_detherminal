@@ -44,11 +44,19 @@ jobs:
 
       - name: Create symlink
         run: |
-          ln -s $(pwd)/monero $(pwd)/../xmrwallet/external-libs/monero
+          ln -s $(pwd)/monero $(pwd)/../xmrwallet_detherminal/external-libs/monero
+
+      - name: Cache external libs
+        uses: actions/cache@v3
+        with:
+          path: $(pwd)/../xmrwallet_detherminal/external-libs
+          key: external-libs-${{ hashFiles('**/xmrwallet_detherminal/external-libs/Makefile') }}
+          restore-keys: |
+            external-libs-
 
       - name: Build lib
         run: |
-          cd $(pwd)/../xmrwallet/external-libs
+          cd $(pwd)/../xmrwallet_detherminal/external-libs
           make
 
       # Set Current Date As Env Variable
