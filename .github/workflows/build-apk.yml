@@ -46,7 +46,8 @@ jobs:
         run: |
           ln -s $(pwd)/monero $(pwd)/../xmrwallet_detherminal/external-libs/monero
 
-      - name: Cache external libs
+       # Restore cache
+      - name: Restore external libs cache
         uses: actions/cache@v3
         with:
           path: $(pwd)/../xmrwallet_detherminal/external-libs
@@ -59,6 +60,15 @@ jobs:
           cd $(pwd)/../xmrwallet_detherminal/external-libs
           make
 
+      # Save cache (even on failure)
+      - name: Save external libs cache
+        if: failure() || success()
+        uses: actions/cache@v3
+        with:
+          path: $(pwd)/../xmrwallet_detherminal/external-libs
+          key: external-libs-${{ hashFiles('**/xmrwallet_detherminal/external-libs/Makefile') }}
+
+          
       # Set Current Date As Env Variable
       - name: Set current date as env variable
         run: echo "date_today=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
