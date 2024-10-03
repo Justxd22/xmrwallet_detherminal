@@ -44,11 +44,11 @@ jobs:
 
       - name: Create symlink
         run: |
-          ln -s $(pwd)/monero $(pwd)/../xmrwallet/external-libs/monero
+          ln -s $(pwd)/monero $(pwd)/../xmrwallet_detherminal/external-libs/monero
 
       - name: Build lib
         run: |
-          cd $(pwd)/../xmrwallet/external-libs
+          cd $(pwd)/../xmrwallet_detherminal/external-libs
           make
 
       # Set Current Date As Env Variable
