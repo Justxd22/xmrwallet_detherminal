@@ -80,6 +80,11 @@ jobs:
       - name: Install libncurses
         run: sudo apt-get install libncurses5 libncurses5-dev libncursesw5-dev
 
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: true
+
       - name: Run gradle tests
         run: ./gradlew test
 
@@ -91,10 +96,6 @@ jobs:
       - name: Build apk release project (APK) - ${{ env.main_project_module }} module
         run: ./gradlew assemble -x lint
 
-      - name: Free Disk Space (Ubuntu)
-        uses: jlumbroso/free-disk-space@main
-        with:
-          tool-cache: true
 
       # Noted For Output [main_project_module]/build/outputs/apk/release/
       - name: Upload APK Release - ${{ env.repository_name }}
