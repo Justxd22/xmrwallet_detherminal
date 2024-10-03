@@ -46,9 +46,9 @@ jobs:
         run: |
           ln -s $(pwd)/monero $(pwd)/../xmrwallet_detherminal/external-libs/monero
 
-       # Restore cache
-      - name: Restore external libs cache
+      - name: external libs cache
         uses: actions/cache@v3
+        if: always()
         with:
           path: $(pwd)/../xmrwallet_detherminal/external-libs
           key: external-libs-${{ hashFiles('**/xmrwallet_detherminal/external-libs/Makefile') }}
@@ -60,13 +60,6 @@ jobs:
           cd $(pwd)/../xmrwallet_detherminal/external-libs
           make
 
-      # Save cache (even on failure)
-      - name: Save external libs cache
-        if: failure() || success()
-        uses: actions/cache@v3
-        with:
-          path: $(pwd)/../xmrwallet_detherminal/external-libs
-          key: external-libs-${{ hashFiles('**/xmrwallet_detherminal/external-libs/Makefile') }}
 
           
       # Set Current Date As Env Variable
@@ -90,10 +83,6 @@ jobs:
       - name: Install libncurses
         run: sudo apt-get install libncurses5 libncurses5-dev libncursesw5-dev
 
-      - name: Free Disk Space (Ubuntu)
-        uses: jlumbroso/free-disk-space@main
-        with:
-          tool-cache: true
 
       - name: Run gradle tests
         run: ./gradlew test
@@ -106,6 +95,10 @@ jobs:
       - name: Build apk release project (APK) - ${{ env.main_project_module }} module
         run: ./gradlew assemble -x lint
 
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: true
 
       # Noted For Output [main_project_module]/build/outputs/apk/release/
       - name: Upload APK Release - ${{ env.repository_name }}
